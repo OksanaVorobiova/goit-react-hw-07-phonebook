@@ -6,11 +6,13 @@ import { useSelector, useDispatch } from 'react-redux';
 //import { useMemo } from 'react';
 import { useEffect } from 'react';
 import { fetchContacts } from 'redux/operations';
-import { selectVisibleContacts } from 'redux/selectors';
+import { selectVisibleContacts, selectLoading } from 'redux/selectors';
 import { deleteContact } from 'redux/operations';
+import { Blocks } from 'react-loader-spinner';
 
 export const Contacts = () => {
   const contacts = useSelector(selectVisibleContacts);
+  const isLoading = useSelector(selectLoading);
   // const filterValue = useSelector(selectFilter);
   const dispatch = useDispatch();
 
@@ -20,30 +22,26 @@ export const Contacts = () => {
   }, [dispatch]);
 
   const handleClick = e => {
-    dispatch(deleteContact(e.currentTarget.id));
+    dispatch(deleteContact(e.target.id));
+    dispatch(fetchContacts());
   };
 
-  if (contacts.length > 0) {
+  if (isLoading) {
+    return <Blocks />;
+  } else if (contacts.length > 0) {
     return (
       <ContactList>
-        {contacts.map(({ createdAt, name, phone }) => (
-          <li key={createdAt}>
+        {contacts.map(({ id, name, phone }) => (
+          <li key={id}>
             <p>
               {name}: {phone}
             </p>
-            <button
-              type="button"
-              name="delete"
-              id={createdAt}
-              onClick={handleClick}
-            >
+            <button type="button" name="delete" id={id} onClick={handleClick}>
               Delete
             </button>
           </li>
         ))}
       </ContactList>
     );
-  } else {
-    return <></>;
   }
 };
