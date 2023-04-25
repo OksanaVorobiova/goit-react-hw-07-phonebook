@@ -23,7 +23,7 @@ export const Contacts = () => {
 
   const handleClick = e => {
     dispatch(deleteContact(e.target.id));
-    dispatch(fetchContacts());
+    // dispatch(fetchContacts());
   };
 
   if (isLoading) {
@@ -41,6 +41,14 @@ export const Contacts = () => {
             </button>
           </li>
         ))}
+      </ContactList>
+    );
+  } else if (contacts.length === 0) {
+    return (
+      <ContactList>
+        <li>
+          <p>No contacts here yet</p>
+        </li>
       </ContactList>
     );
   }

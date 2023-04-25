@@ -10,7 +10,9 @@ export const App = () => {
   //const isLoading = useSelector(selectLoading);
   const error = useSelector(selectError);
 
-  return (
+  return error ? (
+    <p>Sorry, something went wrong :( </p>
+  ) : (
     <>
       <Section title="Phonebook">
         <Form />

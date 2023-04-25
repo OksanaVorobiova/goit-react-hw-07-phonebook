@@ -44,19 +44,25 @@ const contactsSlice = createSlice({
         state.error = null;
       })
       .addCase(deleteContact.fulfilled, (state, { payload }) => {
-        state.items.filter(({ createdAt }) => createdAt !== payload.createdAt);
+        // state.items.filter(({ id }) => id !== payload.id);
         state.isLoading = false;
         state.error = null;
+        const index = state.items.findIndex(({ id }) => id === payload.id);
+        state.items.splice(index, 1);
       })
       .addMatcher(
         isAnyOf(
-          (fetchContacts.pending, addContact.pending, deleteContact.pending)
+          ...[fetchContacts.pending, addContact.pending, deleteContact.pending]
         ),
         handlePending
       )
       .addMatcher(
         isAnyOf(
-          (fetchContacts.rejected, addContact.rejected, deleteContact.rejected)
+          ...[
+            fetchContacts.rejected,
+            addContact.rejected,
+            deleteContact.rejected,
+          ]
         ),
         handleRejected
       );
